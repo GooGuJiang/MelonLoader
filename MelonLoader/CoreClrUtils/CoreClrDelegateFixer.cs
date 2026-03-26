@@ -18,8 +18,21 @@ namespace MelonLoader.CoreClrUtils
 
         internal static bool SanityCheckDetour(ref IntPtr detour)
         {
-            using DataTarget dt = DataTarget.CreateSnapshotAndAttach(Environment.ProcessId);
-            ClrRuntime runtime = dt.ClrVersions.First().CreateRuntime();
+            ClrRuntime runtime;
+            try
+            {
+                using DataTarget dt = DataTarget.CreateSnapshotAndAttach(Environment.ProcessId);
+                var clrInfo = dt.ClrVersions.FirstOrDefault();
+                if (clrInfo == null)
+                    return true;
+
+                runtime = clrInfo.CreateRuntime();
+            }
+            catch (Exception ex)
+            {
+                MelonLogger.Warning($"Skipping CoreCLR detour sanity check because ClrMD could not inspect the current process: {ex.GetType().Name}: {ex.Message}");
+                return true;
+            }
 
             ClrMethod method = runtime.GetMethodByInstructionPointer((ulong)detour.ToInt64());
 

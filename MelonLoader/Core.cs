@@ -143,6 +143,7 @@ namespace MelonLoader
             Fixes.Il2CppInterop.Il2CppInteropUnmangleMethodNameFix.Install();
 
             Fixes.Il2CppInterop.Il2CppInteropExceptionLog.Install();
+            Fixes.Il2CppInterop.Il2CppInteropInjectorHelpersFix.Install();
 
 #if OSX
             Fixes.Il2CppInterop.Il2CppInteropMacFix.Install();
